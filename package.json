@@ -1,0 +1,173 @@
+{
+	"name": "vscode-aws-iot",
+	"displayName": "VSCode AWS IoT",
+	"description": "AWS IoT manager and pub/sub client",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.51.0"
+	},
+	"categories": [
+		"Other",
+		"Extension Packs"
+	],
+	"activationEvents": [
+		"onStartupFinished",
+		"onCommand:awsiot.registerProfile",
+		"onCommand:awsiot.listthings",
+		"onCommand:awsiot.subscribe"
+	],
+	"main": "./dist/extension.js",
+	"publisher": "fminetto",
+	"contributes": {
+		"viewsWelcome": [
+			{
+				"view": "vscode:things",
+				"contents": "List things to see them here\n[List Things](command:awsiot.listthings)"
+			},
+			{
+				"view": "vscode:topics",
+				"contents": "You haven't subscribed in any topics! \n[Subscribe Now](command:awsiot.subscribe)"
+			}
+		],
+		"configuration": [
+			{
+				"title": "AWS IoT",
+				"properties": {
+					"awsiot.profile": {
+						"type": "string",
+						"default": "default",
+						"scope": "application",
+						"description": "Default profile for aws"
+					},
+					"awsiot.region": {
+						"type": "string",
+						"default": "us-east-1",
+						"scope": "application",
+						"description": "Default region for aws"
+					}
+				}
+			}
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"icon": "resources/icon.svg",
+					"id": "vscode-aws-iot",
+					"title": "AWS IoT Client"
+				}
+			]
+		},
+		"menus": {
+			"view/title": [
+				{
+					"command": "awsiot.creatething",
+					"when": "view == vscode:things"
+				},
+				{
+					"command": "awsiot.deletething",
+					"when": "view == vscode:things"
+				},
+				{
+					"command": "awsiot.findthing",
+					"when": "view == vscode:things",
+					"group": "navigation"
+				}
+			]
+		},
+		"views": {
+			"vscode-aws-iot": [
+				{
+					"id": "vscode:things",
+					"name": "Things",
+					"type": "tree",
+					"visibility": "collapsed",
+					"contextualTitle": "List things on AWS"
+				},
+				{
+					"id": "vscode:topics",
+					"name": "Topics",
+					"type": "tree",
+					"visibility": "collapsed",
+					"contextualTitle": "List things on AWS"
+				}
+			]
+		},
+		"commands": [
+			{
+				"command": "awsiot.getThing",
+				"title": "IOT: Get thing details"
+			},
+			{
+				"command": "awsiot.registerProfile",
+				"title": "IOT: Register Profile"
+			},
+			{
+				"command": "awsiot.listthings",
+				"title": "IOT: List Things"
+			},
+			{
+				"command": "awsiot.findthing",
+				"title": "IOT: Find Things",
+				"icon": {
+					"dark": "resources/search.dark.svg",
+					"light": "resources/search.light.svg"
+				}
+			},
+			{
+				"command": "awsiot.creatething",
+				"title": "IOT: Create Thing"
+			},
+			{
+				"command": "awsiot.deletething",
+				"title": "IOT: Delete Thing"
+			},
+			{
+				"command": "awsiot.updatething",
+				"title": "IOT: Update Thing"
+			},
+			{
+				"command": "awsiot.subscribe",
+				"title": "IOT: Subscribe"
+			},
+			{
+				"command": "awsiot.publish",
+				"title": "IOT: Publish"
+			}
+		]
+	},
+	"license": "GPL-3.0+",
+	"scripts": {
+		"build:vsix": "vsce package",
+		"vscode:prepublish": "yarn run package",
+		"compile": "webpack --devtool nosources-source-map --config ./build/node-extension.webpack.config.js",
+		"watch": "webpack --watch --devtool nosources-source-map --info-verbosity verbose --config ./build/node-extension.webpack.config.js",
+		"package": "webpack --mode production --config ./build/node-extension.webpack.config.js",
+		"test-compile": "tsc -p ./",
+		"test-watch": "tsc -watch -p ./",
+		"pretest": "yarn run test-compile && yarn run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.1.3",
+		"@types/mocha": "^8.0.0",
+		"@types/node": "^12.11.7",
+		"@types/vscode": "^1.51.0",
+		"@typescript-eslint/eslint-plugin": "^4.1.1",
+		"@typescript-eslint/parser": "^4.1.1",
+		"eslint": "^7.9.0",
+		"glob": "^7.1.6",
+		"mocha": "^8.1.3",
+		"ts-loader": "^8.0.3",
+		"typescript": "^4.0.2",
+		"vscode-test": "^1.4.0",
+		"webpack": "^4.44.1",
+		"webpack-cli": "^3.3.12"
+	},
+	"dependencies": {
+		"aws-iot-device-sdk": "^2.2.6",
+		"aws-sdk": "^2.791.0",
+		"global": "^4.4.0",
+		"vsce": "^1.84.0"
+	}
+}
